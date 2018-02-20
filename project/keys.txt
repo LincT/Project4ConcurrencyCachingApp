@@ -1,0 +1,10 @@
+Copy the text below into a python file called "keys.py"
+that file will be ommitted from github automatically so keys are only local to a machine
+
+class KeyDefinitions():
+    @staticmethod
+    def keys():
+        details = {}
+        # instead of manually editing a dictionary, use this syntax to add keys
+        details.setdefault("some_key", "some_value")
+        return details

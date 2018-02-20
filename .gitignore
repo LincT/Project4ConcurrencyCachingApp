@@ -1,0 +1,12 @@
+# the one thing we have to ignore in every python project
+.idea
+
+# in case we want to use sqlite integration
+sqlite3.exe
+
+# a small class file to hold secure things we don't want on github
+project/keys.py
+
+# make a python file called scratchpad if you want to test small snippets without
+# running either unit tests or the whole program
+project/scratchpad.py

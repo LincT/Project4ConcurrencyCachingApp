@@ -16,7 +16,7 @@ class Audio:
         print(parms)
         # print(Audio.spotify.prefix)
 
-        call = spotipy.Spotify(client_credentials_manager=Audio.creds).search(q=parms, limit=3)
+        call = spotipy.Spotify(client_credentials_manager=Audio.creds).search(q=parms, limit=3,type='track')
         return call
 
     def auth(self):

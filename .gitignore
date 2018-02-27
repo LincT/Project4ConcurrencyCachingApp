@@ -12,4 +12,4 @@ project/keys.py
 project/scratchpad.py
 
 # virtual environment should be ignored
-venv
+venv/

@@ -10,3 +10,6 @@ project/keys.py
 # make a python file called scratchpad if you want to test small snippets without
 # running either unit tests or the whole program
 project/scratchpad.py
+
+# virtual environment should be ignored
+project/venv

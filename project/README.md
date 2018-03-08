@@ -3,5 +3,5 @@
 
 Api Name | HomePage
 --- | ---
-example1|www.example1.org
+spotfy|https://developer.spotify.com/web-api/
 example2|www.example2.net

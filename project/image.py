@@ -7,7 +7,7 @@ people_api = ('https://en.wikipedia.org/w/api.php?action=query&format=json&list=
 # Enter the name of the artist
 user_input = input('name ')
 
-url = people_api + urllib.parse.urlencode({'name': name})
+url = people_api + urllib.parse.urlencode({'user_input': user_input})
 # print(url)
 json_data = requests.get(url).json()
 

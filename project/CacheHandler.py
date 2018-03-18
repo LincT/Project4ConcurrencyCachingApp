@@ -19,7 +19,13 @@ class CacheIO:
         :param result_ttl: int
         """
         self.result_ttl = result_ttl
-        self.__initialize_cache__()
+        self.DBCache.drop_table(self.table_name)
+        self.DBCache.create_table(self.table_name,
+                                  'result_id integer PRIMARY KEY, '
+                                  'datetime text NOT NULL, '
+                                  'api_name text NOT NULL, '
+                                  'query_term text NOT NULL, '
+                                  'api_result_text text NOT NULL')
 
     def __str__(self):
         """
@@ -35,6 +41,9 @@ class CacheIO:
 
         return verbose_table_data
 
+    def update_result_ttl(self, seconds):
+        self.result_ttl = seconds
+
     def search(self, term):
         """
         check database for records within lifecycle
@@ -42,8 +51,14 @@ class CacheIO:
         if no result, return a standard message to indicate such
         """
         db = self.DBCache
-        results = db.execute_query(table='api_json_return_values', regex=term)
+        results = db.execute_query(table='api_json_return_values', regex=term, parm='query_term')
+        filtered_set = []
         if len(results) > 0:
+            for each in results:
+                if self.get_time_elapsed(each[1]) < self.result_ttl:
+                    filtered_set.append(each)
+                else:
+                    db.delete_record(table_name=self.table_name, regex=each[0], parm='result_id')
             return results
         else:
             return []
@@ -59,7 +74,7 @@ class CacheIO:
                                 'datetime, api_name, query_term, api_result_text',
                                 field_data)
 
-
+    # any more time related methods and it might be better to add a class to handle time
     @staticmethod
     def get_date_time():
         # https://stackoverflow.com/a/7999977
@@ -67,11 +82,7 @@ class CacheIO:
         # returning utc for consistency regardless of locale or daylight savings rules
         return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
-    def __initialize_cache__(self):
-        self.DBCache.drop_table(self.table_name)
-        self.DBCache.create_table(self.table_name,
-                                  'result_id integer PRIMARY KEY, '
-                                  'datetime text NOT NULL, '
-                                  'api_name text NOT NULL, '
-                                  'query_term text NOT NULL, '
-                                  'api_result_text text NOT NULL')
+    def get_time_elapsed(self, test):
+        test_time = datetime.datetime.strptime(test, "%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.strptime(self.get_date_time(), "%Y-%m-%d %H:%M:%S")
+        return (now - test_time).seconds

@@ -1,22 +1,36 @@
 import urllib.parse
+from PIL import Image
 import requests
 import json
+from pprint import pprint
 
-people_api = ('https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=?')
+# Make an api request
+people_api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&'
 
-# Enter the name of the artist
-user_input = input('name ')
-
-url = people_api + urllib.parse.urlencode({'user_input': user_input})
+user_input = input('name: ')
+# name = input('name: ')
+url = people_api + urllib.parse.urlencode({'titles': user_input, 'prop': 'images'})
 # print(url)
 json_data = requests.get(url).json()
+# pprint(json_data)
 
-print(json_data)
-# prinDict = dict(map(int, x.split(':')) for x in json_data)
-# for key in json_data:
-#     print(key)
+# Extract pageid from request response.
+id = next(iter(json_data['query']['pages'].keys()))
 
-# with open('people_data', 'w') as f:
-#     data = j
+# Use the pageid to get the pages and get image files
+files = json_data['query']['pages'][id]['images']
+# pprint(file_list)
 
-# Extract elements from the response.
+# Get image files and put them in a list
+file_list = []
+for file in files:
+    file_list.append(file['title'])
+
+
+# Trim the 'File:' part of the image tilte
+file_list = list(map(lambda each:each.strip("File:"), file_list))
+
+# Request the image url
+new_url = people_api + urllib.parse.urlencode({'titles': "Image:" + file_list[5], 'prop': 'imageinfo', 'iiprop': 'url'})
+image_json_data = requests.get(new_url).json()
+pprint(image_json_data)

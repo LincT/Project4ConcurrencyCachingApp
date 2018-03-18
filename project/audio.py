@@ -13,11 +13,17 @@ class Audio:
 
     @staticmethod
     def search(parms):
-        print(parms)
-        # print(Audio.spotify.prefix)
-
-        call = spotipy.Spotify(client_credentials_manager=Audio.creds).search(q=parms, limit=3,type='track')
-        return call
+        call = spotipy.Spotify(client_credentials_manager=Audio.creds).search(q=parms, limit=3, type='track')
+        result_set = []
+        for each in list(dict(dict(call)["tracks"])["items"]):
+            item_dict = dict(each)
+            if "preview_url" in item_dict.keys():
+                artist = dict(item_dict["artists"][0])['name']
+                title = item_dict["name"]
+                preview_url = item_dict["preview_url"]
+                item = "{}: {}, {}".format(artist, title, preview_url)
+                result_set.append(item)
+        return "\n".join(result_set)
 
     def auth(self):
         pass

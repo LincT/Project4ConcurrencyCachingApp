@@ -50,7 +50,7 @@ class DataBaseIO():
     def create_table(self, table_name, *args):
         with self.__db__:
             table_name = table_name.strip("'").strip(";")
-            args = str(args).replace("'", "").replace(";","").strip("(").strip(")").strip(",")
+            args = str(args).replace("'", "").replace(";", "").strip("(").strip(")").strip(",")
             arg_list = [each for each in args.split(",")]
             sql = "Create Table if not exists {} ({})".format(table_name, ",".join(arg_list))
             self.__execute_sql__(sql)
@@ -88,12 +88,12 @@ class DataBaseIO():
         else:
             print("Too broad of delete clause, aborting")
 
-    # def drop_table(self, table_name):
-    #     # comment out this method unless absolutely needed. normally actions like this would
-    #     # be for db admins only to perform
-    #     # one could also do this action through a sql workbench
-    #     with self.__db__:
-    #         self.__execute_sql__("DROP TABLE IF EXISTS {}".format(table_name))
+    def drop_table(self, table_name):
+        # comment out this method unless absolutely needed. normally actions like this would
+        # be for db admins only to perform
+        # one could also do this action through a sql workbench
+        with self.__db__:
+            self.__execute_sql__("DROP TABLE IF EXISTS {}".format(table_name))
 
     def close(self):
         self.__db__ = None

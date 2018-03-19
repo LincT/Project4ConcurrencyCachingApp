@@ -13,3 +13,6 @@ project/scratchpad.py
 
 # virtual environment should be ignored
 project/venv
+
+# ignoring database as we want caching to be local to machines, not global
+project/cache_database

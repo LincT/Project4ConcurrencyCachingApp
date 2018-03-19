@@ -3,13 +3,14 @@ from PIL import Image
 import requests
 import json
 from pprint import pprint
+import webbrowser
 
 # Make an api request
 people_api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&'
 
-user_input = input('name: ')
+artist = input('artist name: ')
 # name = input('name: ')
-url = people_api + urllib.parse.urlencode({'titles': user_input, 'prop': 'images'})
+url = people_api + urllib.parse.urlencode({'titles': artist, 'prop': 'images'})
 # print(url)
 json_data = requests.get(url).json()
 # pprint(json_data)
@@ -33,4 +34,10 @@ file_list = list(map(lambda each:each.strip("File:"), file_list))
 # Request the image url
 new_url = people_api + urllib.parse.urlencode({'titles': "Image:" + file_list[5], 'prop': 'imageinfo', 'iiprop': 'url'})
 image_json_data = requests.get(new_url).json()
-pprint(image_json_data)
+
+
+new = 2
+url_image = image_json_data['query']['pages']['-1']['imageinfo'][0]['url']
+webbrowser.open(url_image,new=new)
+
+# pprint(image_json_data)

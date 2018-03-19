@@ -32,12 +32,13 @@ for file in files:
 file_list = list(map(lambda each:each.strip("File:"), file_list))
 
 # Request the image url
+new = 2
 new_url = people_api + urllib.parse.urlencode({'titles': "Image:" + file_list[5], 'prop': 'imageinfo', 'iiprop': 'url'})
 image_json_data = requests.get(new_url).json()
 
+# image_key = next(iter(image_json_data['query']['pages'].keys()['imageinfo']['url']))
+image_key = next(iter(image_json_data['query']['pages'].keys()))
+url_image = image_json_data['query']['pages'][image_key]['imageinfo'][0]['url']
 
-new = 2
-url_image = image_json_data['query']['pages']['-1']['imageinfo'][0]['url']
 webbrowser.open(url_image,new=new)
-
 # pprint(image_json_data)

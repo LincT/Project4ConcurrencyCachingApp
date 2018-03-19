@@ -19,7 +19,7 @@ class CacheIO:
         :param result_ttl: int
         """
         self.result_ttl = result_ttl
-        self.DBCache.drop_table(self.table_name)
+        # self.DBCache.drop_table(self.table_name)
         self.DBCache.create_table(self.table_name,
                                   'result_id integer PRIMARY KEY, '
                                   'datetime text NOT NULL, '
@@ -48,28 +48,25 @@ class CacheIO:
         """
         check database for records within lifecycle
         return relevant result
-        if no result, return a standard message to indicate such
+        if no result, return an empty list to indicate such
         """
         db = self.DBCache
         results = db.execute_query(table='api_json_return_values', regex=term, parm='query_term')
         filtered_set = []
         if len(results) > 0:
             for each in results:
-                if self.get_time_elapsed(each[1]) < self.result_ttl:
-                    filtered_set.append(each)
+                if self.get_time_elapsed(each[1]) <= self.result_ttl:
+                    filtered_set.append(each[4])
                 else:
                     db.delete_record(table_name=self.table_name, regex=each[0], parm='result_id')
-            return results
-        else:
-            return []
+        return filtered_set
 
-    def add_record(self, term):
+    def add_record(self, term,api,result):
         current_datetime = self.get_date_time()
-        api = 'test_api'
+        api = api
         query_term = term
-        json = '{some_test_json:some_test_result}'
-        field_data = "'{}', '{}', '{}', '{}'".format(current_datetime, api, query_term, json)
-        print(field_data)
+        result = result
+        field_data = "'{}', '{}', '{}', '{}'".format(current_datetime, api, query_term, result)
         self.DBCache.add_record('api_json_return_values',
                                 'datetime, api_name, query_term, api_result_text',
                                 field_data)

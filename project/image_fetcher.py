@@ -35,7 +35,7 @@ class image_fetcher():
 
             # Trim the 'File:' part of the image tilte
             file_list = list(map(lambda each:each.strip("File:"), file_list))
-
+            # print(file_list)
             # Request the image url
             new = 2
             for n in range(len(file_list)):

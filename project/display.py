@@ -9,7 +9,7 @@ audio3 = ['Rihanna', 'Diamonds', 'https://p.scdn.co/mp3-preview/c28012b6e745cf06
 audio_objects = [audio1, audio2, audio3]
 
 #(Wikipedia API) fake artist info
-artist_info = [Image.open('/Users/tylercaldwell/PycharmProjects/flaskhelp/static/rihanna.jpg'), 'Rihanna is a Barbadian Singer, songwriter and actress.']
+# artist_info = [Image.open('/Users/tylercaldwell/PycharmProjects/flaskhelp/static/rihanna.jpg'), 'Rihanna is a Barbadian Singer, songwriter and actress.']
 
 #(Youtube API) fake artist youtube video
 media = "https://www.youtube.com/embed/0RyInjfgNc4"
@@ -45,8 +45,8 @@ audio3 = ['Rihanna', 'Diamonds', 'https://p.scdn.co/mp3-preview/c28012b6e745cf06
 audio_objects = [audio1, audio2, audio3]
 
 #(Wikipedia API) fake artist info
-artist_info = [Image.open('/Users/tylercaldwell/PycharmProjects/flaskhelp/static/rihanna.jpg'), 'Rihanna is a Barbadian Singer, songwriter and actress.']
-
+# artist_info = [Image.open('/Users/tylercaldwell/PycharmProjects/flaskhelp/static/rihanna.jpg'), 'Rihanna is a Barbadian Singer, songwriter and actress.']
+artist_info = []
 #(Youtube API) fake artist youtube video
 media = "https://www.youtube.com/embed/0RyInjfgNc4"
 

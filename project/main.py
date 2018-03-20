@@ -1,5 +1,6 @@
 from project.CacheHandler import CacheIO
 from project.audio import Audio
+from project import display
 import webbrowser
 
 cache = CacheIO()
@@ -50,20 +51,22 @@ def generate_view(data_list):
             else:
                 display_list.append(each)
 
-        for each in display_list:
-            url = str(each)
-            if len(url.split(",")) == 2:
-                subUrl = (url.split(",")[1]).strip()
-                print(url)
-                if subUrl is None:
-                    print(55, subUrl)
-                    pass
-                elif subUrl == "None":
-                    print(58, subUrl)
-                    pass
-                else:
-                    webbrowser.open(subUrl)
-
+        # for each in display_list:
+        #     url = str(each)
+        #     if len(url.split(",")) == 2:
+        #         subUrl = (url.split(",")[1]).strip()
+        #         print(url)
+        #         if subUrl is None:
+        #             print(55, subUrl)
+        #             pass
+        #         elif subUrl == "None":
+        #             print(58, subUrl)
+        #             pass
+        #         else:
+        #             webbrowser.open(subUrl)
+        display.display_accept_arugements(
+            display_list,
+            r"C:\Users\Linc\PycharmProjects\CapstoneProject4\tests\Lady_Gaga_Glitter_and_Grease2.jpg","https://www.youtube.com/watch?v=Z6hL6fkJ1_k")
         return "your results should open momentarily in a new window"
     else:
         return "no data to display"

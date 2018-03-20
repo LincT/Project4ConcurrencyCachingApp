@@ -2,6 +2,7 @@ from project import flask_setup
 from PIL import Image
 
 
+
 #(Spotify API) fake audio objects
 audio1 = ['Rihanna', 'Rude Boy', 'https://p.scdn.co/mp3-preview/c28012b6e745cf061ff44cbe63cfb03d9cbb5960?cid=d0e072ada0c84e6582fa95e7f7670a36']
 audio2 = ['Rihanna', 'Love On The Brain', 'https://p.scdn.co/mp3-preview/104ad0ea32356b9f3b2e95a8610f504c90b0026b?cid=d0e072ada0c84e6582fa95e7f7670a36']
@@ -51,4 +52,4 @@ artist_info = []
 media = "https://www.youtube.com/embed/0RyInjfgNc4"
 
 
-display_accept_arugements(audio_objects, artist_info, media)
+#display_accept_arugements(audio_objects, artist_info, media)

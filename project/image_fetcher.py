@@ -5,6 +5,7 @@ import json
 from pprint import pprint
 import webbrowser
 
+
 class image_fetcher():
 
     def fetch(self, artist):
@@ -46,7 +47,8 @@ class image_fetcher():
                 image_key = next(iter(image_json_data['query']['pages'].keys()))
                 url_image = image_json_data['query']['pages'][image_key]['imageinfo'][0]['url']
 
-            webbrowser.open(url_image, new=new)
+            # webbrowser.open(url_image, new=new)
+                return url_image
         # pprint(image_json_data)
         except Exception as e:
-            print('Error fetching image because', e)
+            return 'Error fetching image because', e

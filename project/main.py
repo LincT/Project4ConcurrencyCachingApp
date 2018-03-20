@@ -28,7 +28,6 @@ def display_accept_arugements(audio_objects, artist_info, media):
 
     # Assuming artist_info is an object with an image(rihanna.jpg), and text("Rihanna is ....")
     artist_image = artist_info[0]
-    image_path = '/Users/tylercaldwell/PycharmProjects/flaskhelp/static/%s.jpg' % artist_name
     # artist_image.save(image_path)
     image = pic.fetch(artist_name)
     info = get_lyrics(artist_name.strip()+":" + str(song_titles[0]).strip())

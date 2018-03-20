@@ -56,7 +56,7 @@ def get_lyrics(term):
         artist = str(term).split(":")[0].strip().replace(" ", "%20")
         song_title = str(term).split(":")[1].strip().replace(" ", "%20")
         url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
-        lyrics = requests.get(url).json()["lyrics"]
+        lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
         return lyrics
     else:
         return "no valid lyrics"
@@ -97,7 +97,7 @@ def generate_view(data_list):
         #             pass
         #         else:
         #             webbrowser.open(subUrl)
-        print(display_list)
+        # print(display_list)
         display_accept_arugements(
             display_list,
             r"..\tests\Lady_Gaga_Glitter_and_Grease2.jpg",

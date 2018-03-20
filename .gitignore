@@ -10,3 +10,5 @@ project/keys.py
 # make a python file called scratchpad if you want to test small snippets without
 # running either unit tests or the whole program
 project/scratchpad.py
+
+project/__pycache__/flask_setup.cpython-35.pyc

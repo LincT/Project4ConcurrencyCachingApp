@@ -44,7 +44,7 @@ class CacheIO:
     def update_result_ttl(self, seconds):
         self.result_ttl = seconds
 
-    def search(self, term):
+    def search_simple(self, term):
         """
         check database for records within lifecycle
         return relevant result
@@ -61,7 +61,12 @@ class CacheIO:
                     db.delete_record(table_name=self.table_name, regex=each[0], parm='result_id')
         return filtered_set
 
-    def add_record(self, term,api,result):
+    def search_advanced(self, term, api):
+        db = self.DBCache
+        db.execute_query_multiple_parameters(
+            table='api_json_return_values', regex=(term, api), parm=('query_term', 'api_name'))
+
+    def add_record(self, term, api, result):
         current_datetime = self.get_date_time()
         api = api
         query_term = term

@@ -41,10 +41,18 @@ class DataBaseIO():
         regex = regex.strip("'").strip(";")
 
         if parm != '':
-            results = self.__cur__.execute("select {} from {} where {} = '{}'"
-                                           .format(select, table, parm, regex)).fetchall()
+            results = self.__cur__.execute(
+                "select {} from {} where {} = '{}'".format(select, table, parm, regex)).fetchall()
         else:
             results = self.__cur__.execute('select {} from {}'.format(select, table)).fetchall()
+        return results
+
+    def execute_query_multiple_parameters(self,table,select='*',parm=(),regex=()):
+        results = []
+        i = 0
+        while i < len(parm):
+            results.append(each for each in self.__cur__.execute(
+                "select {} from {} where {} = '{}'".format(select, table, parm[i], regex[i])).fetchall())
         return results
 
     def create_table(self, table_name, *args):

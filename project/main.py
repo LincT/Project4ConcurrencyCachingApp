@@ -1,14 +1,14 @@
 from project.CacheHandler import CacheIO
 from project.audio import Audio
-from project import flask_setup
+from project.display import ViewPortal
 from project.image_fetcher import image_fetcher
-import requests
-from PIL import Image
-import webbrowser
+from project.lyrics_fetcher import LyricsFetcher
 
 cache = CacheIO()
 audioApi = Audio()
 pic = image_fetcher()
+lyrics = LyricsFetcher()
+viewer = ViewPortal()
 
 def initialize():
     """
@@ -17,34 +17,31 @@ def initialize():
     pass
 
 
-def display_accept_arugements(audio_objects, artist_info, media):
-    # Assuming audio_objects is an collection of objects each with (artist_name, song_title, song_url)
-    artist_name = str(str(audio_objects[0]).split(",")[0]).split(":")[0]
-    song_titles = []
-    song_urls = []
-    for string in audio_objects:
-        song_titles.append(str(string).split(",")[0].split(":")[1].strip())
-        song_urls.append(str(string).split(",")[1].strip())
+def display_accept_arugements(audio_objects, text, image):
+    # keeping the wrapper as it used to be a full function
+    # TODO remove dependency on this wrapper and wire directly to function
+    viewer.display_accept_arugements(audio_objects, text, image)
 
-    # Assuming artist_info is an object with an image(rihanna.jpg), and text("Rihanna is ....")
-    artist_image = artist_info[0]
-    # artist_image.save(image_path)
-    image = pic.fetch(artist_name)
-    info = get_lyrics(artist_name.strip()+":" + str(song_titles[0]).strip())
-
-    flask_setup.displayprofile(artist_name, image, info, media, song_titles, song_urls)
-
-    flask_setup.runapp(artist_name)
 
 def get_results(term):
     # query the api's here
     # also query/update the cache
-    results = [str(each) for each in cache.search(term=term)]
-    if len(results) < 1:  # if no results or an error, check for new data
-        new_data = audioApi.search(term)
-        results += new_data
-        cache.add_record(term, 'spotipy', "^|".join(new_data))
-    # print(results)
+    # TODO build results as either text, or links in list/tuple
+    artist_name = term[0]
+    song_title = term[1]
+    music = [str(each) for each in cache.search(term=song_title)]
+    artist_image = cache.search(term=artist_name)
+    lyric_text = cache.search(song_title)
+
+    if len(music) < 1:  # if no results or an error, check for new data
+        audio_records = audioApi.search(song_title)
+
+        artist_image = pic.fetch(artist_name)
+        lyric_text = get_lyrics(song_title)
+        results += audio_records
+        cache.add_record(song_title, 'spotipy', "^|".join(audioApi))
+        cache.add_record(artist_name,'image', artist_image)
+        cache.add_record(song_title,"lyrics",lyric_text)
 
     # in theory all api's should have returned data by this point,
     # we then return the result data to the calling method
@@ -52,25 +49,19 @@ def get_results(term):
 
 
 def get_lyrics(term):
-    if len(str(term).split(":")) > 1:
-        artist = str(term).split(":")[0].strip().replace(" ", "%20")
-        song_title = str(term).split(":")[1].strip().replace(" ", "%20")
-        url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
-        lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
-        return lyrics
-    else:
-        return "no valid lyrics"
+    return lyrics.fetch(term)
 
 
-def query_user(prompt):
-    # currently just a wrapper
-    # needs some form of validation
-    # for now min chars = 3 as I imagine spotify would be happy if we weren't
+def query_user(prompt, format_string=""):
+    # for now min chars = 3 as I imagine api's would be happy if we weren't
     # spamming them with 1 letter search queries
     user_answer = ""
-    while len(user_answer.strip()) < 3:
-        user_answer = input(prompt + "\n")
-    return user_answer
+    collected_answers = []
+    for line in prompt:
+        while len(user_answer.strip()) < 3:
+            user_answer = input(format_string.format(line))
+        collected_answers.append(user_answer)
+    return collected_answers
 
 
 def generate_view(data_list):
@@ -84,20 +75,6 @@ def generate_view(data_list):
             else:
                 display_list.append(each)
 
-        # for each in display_list:
-        #     url = str(each)
-        #     if len(url.split(",")) == 2:
-        #         subUrl = (url.split(",")[1]).strip()
-        #         print(url)
-        #         if subUrl is None:
-        #             print(55, subUrl)
-        #             pass
-        #         elif subUrl == "None":
-        #             print(58, subUrl)
-        #             pass
-        #         else:
-        #             webbrowser.open(subUrl)
-        # print(display_list)
         display_accept_arugements(
             display_list,
             r"..\tests\Lady_Gaga_Glitter_and_Grease2.jpg",
@@ -105,12 +82,10 @@ def generate_view(data_list):
 
 
 def main():
-    term = query_user("please type the name of a song or artist")
-    get_lyrics(term)
-    results = []
-    for each in get_results(term):
-        results.append(each)
-
+    # cli entry point
+    queries = ("Please type the name of an artist", "Please type the name of a song you'd like to search for")
+    term = query_user(queries, "{}\n")
+    results = get_results(term)
     generate_view(results)
 
 

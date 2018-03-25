@@ -1,9 +1,12 @@
 from project.CacheHandler import CacheIO
 from project.audio import Audio
+from project.bookmarks import BookMarks
 import webbrowser
 
 cache = CacheIO()
 audioApi = Audio()
+bookmarks = BookMarks()
+
 
 def initialize():
     """

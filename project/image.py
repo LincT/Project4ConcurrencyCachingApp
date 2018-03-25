@@ -38,7 +38,7 @@ try:
     new = 2
     for n in range(len(file_list)):
 
-        new_url = people_api + urllib.parse.urlencode({'titles': "Image:" + file_list[n], 'prop': 'imageinfo', 'iiprop': 'url'})
+        new_url = people_api + urllib.parse.urlencode({'titles': "Image:" + file_list[2], 'prop': 'imageinfo', 'iiprop': 'url'})
         image_json_data = requests.get(new_url).json()
 
     # image_key = next(iter(image_json_data['query']['pages'].keys()['imageinfo']['url']))

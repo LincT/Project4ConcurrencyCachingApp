@@ -11,13 +11,8 @@ project/keys.py
 # running either unit tests or the whole program
 project/scratchpad.py
 
-<<<<<<< HEAD
-project/__pycache__/flask_setup.cpython-35.pyc
-=======
 # virtual environment should be ignored
 project/venv
 
 # ignoring database as we want caching to be local to machines, not global
 project/cache_database
->>>>>>> master
-git

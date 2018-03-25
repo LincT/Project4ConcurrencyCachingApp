@@ -1,6 +1,7 @@
 from project.sql_handler import DataBaseIO
 import datetime
 
+
 class BookMarks():
     # for now having the bookmarks live in the same db as the cache
     # should db size become an issue, then it might be better to split the db

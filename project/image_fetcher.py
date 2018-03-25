@@ -1,9 +1,5 @@
 import urllib.parse
-from PIL import Image
 import requests
-import json
-from pprint import pprint
-import webbrowser
 
 
 class image_fetcher():

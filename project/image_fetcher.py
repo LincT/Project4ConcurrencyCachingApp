@@ -16,9 +16,9 @@ class image_fetcher():
 
         # name = input('name: ')
         url = people_api + urllib.parse.urlencode({'titles': artist, 'prop': 'images'})
-        # print(url)
+        print("url", url)
         json_data = requests.get(url).json()
-        # pprint(json_data)
+        print("json", json_data)
 
         # Extract pageid from request response.
         try:

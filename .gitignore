@@ -16,3 +16,8 @@ project/venv
 
 # ignoring database as we want caching to be local to machines, not global
 project/cache_database
+
+# recommended ignores from the web
+project/__pycache__/
+__pycache__/
+*.pyc

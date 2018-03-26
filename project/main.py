@@ -18,6 +18,15 @@ def initialize():
     pass
 
 
+def add_bookmark():
+    # saves a staged bookmark, see bookmarks.py for more info
+    bookmarks.commit()
+
+
+def load_bookmark(song_name):
+    flask_setup.displayprofile(artist_name, image, info, media, song_titles, song_urls)
+    flask_setup.runapp(artist_name)
+
 def display_accept_arugements(audio_objects, artist_info, media):
     # Assuming audio_objects is an collection of objects each with (artist_name, song_title, song_url)
     artist_name = str(str(audio_objects[0]).split(",")[0]).split(":")[0]
@@ -35,7 +44,19 @@ def display_accept_arugements(audio_objects, artist_info, media):
 
     flask_setup.displayprofile(artist_name, image, info, media, song_titles, song_urls)
 
+    # since we already have the info we can stage the bookmark instead of trying to pull from the html again
+    bookmark_dict = {
+        "artist_name":artist_name,
+        "image": image,
+        "text":info,
+        "media":media,
+        "song_titles":song_titles,
+        "song_urls":song_urls
+    }
+    bookmarks.stage(bookmark_dict)
+
     flask_setup.runapp(artist_name)
+
 
 def get_results(term):
     # query the api's here

@@ -7,7 +7,7 @@ class BookMarks():
     # should db size become an issue, then it might be better to split the db
     __bookmarkDB__ = DataBaseIO('cache_database')
     __bookmark_table_name__ = "bookmarks"
-    staged_bookmark = None
+    staged_bookmark = dict()
 
     def __init__(self):
         self.__bookmarkDB__.create_table("bookmarks",
@@ -54,12 +54,17 @@ class BookMarks():
         results = "\n".join([str(each) for each in db.execute_query(table, "entry_name")])
         return results
 
-    def stage(self, bookmark_string):
+    def stage(self, bookmark_dict):
 
-        self.staged_bookmark = bookmark_string
+        self.staged_bookmark = bookmark_dict
 
     def commit(self):
-        bm = "" + self.staged_bookmark
-        bmList = bm.split(",")
+        # save a pre-staged bookmark
+        # future development will try and intuit data from what is sent instead of the man
+        bm = dict(self.staged_bookmark)
+        bookmark_name = "{}: {}".format(bm.get("artist_name"),bm.get("song_titles")[0])
+        image = bm.get("image")
+        lyrics = bm.get("text")
+        music = bm.get("song_urls")
 
-        self.add()
+        self.add(name=bookmark_name, image_url=image, lyrics_text=lyrics, music_url=music)

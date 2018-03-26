@@ -19,4 +19,5 @@ project/cache_database
 
 # recommended ignores from the web
 project/__pycache__/
+__pycache__/
 *.pyc

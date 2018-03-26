@@ -1,9 +1,6 @@
 import urllib.parse
-from PIL import Image
 import requests
-import json
-from pprint import pprint
-import webbrowser
+
 
 
 class image_fetcher():
@@ -16,9 +13,8 @@ class image_fetcher():
 
         # name = input('name: ')
         url = people_api + urllib.parse.urlencode({'titles': artist, 'prop': 'images'})
-        print("url", url)
         json_data = requests.get(url).json()
-        print("json", json_data)
+        print(json_data)
 
         # Extract pageid from request response.
         try:
@@ -26,7 +22,6 @@ class image_fetcher():
 
             # Use the pageid to get the pages and get image files
             files = json_data['query']['pages'][page_id]['images']
-            # pprint(file_list)
 
             # Get image files and put them in a list
             file_list = []
@@ -34,8 +29,8 @@ class image_fetcher():
                 file_list.append(file['title'])
 
             # Trim the 'File:' part of the image tilte
-            file_list = list(map(lambda each:each.strip("File:"), file_list))
-            # print(file_list)
+            file_list = list(map(lambda each: each.strip("File:"), file_list))
+            print(file_list)
             # Request the image url
             new = 2
             for n in range(len(file_list)):
@@ -49,6 +44,7 @@ class image_fetcher():
 
             # webbrowser.open(url_image, new=new)
                 return url_image
-        # pprint(image_json_data)
+        # print(image_json_data)
         except Exception as e:
-            return 'Error fetching image because', e
+            details = 'Error fetching image because', e
+            print(details)

@@ -44,14 +44,19 @@ class CacheIO:
     def update_result_ttl(self, seconds):
         self.result_ttl = seconds
 
-    def search_simple(self, term):
+    def search(self, term, api=""):
         """
         check database for records within lifecycle
         return relevant result
         if no result, return an empty list to indicate such
         """
         db = self.DBCache
-        results = db.execute_query(table='api_json_return_values', regex=term, parm='query_term')
+        results = None
+        if api == "":
+            results = db.execute_query(table='api_json_return_values', regex=term, parm='query_term')
+        else:
+            results = db.execute_query_multiple_parameters(
+                table='api_json_return_values', regex=(term, api), parm=('query_term', 'api_name'))
         filtered_set = []
         if len(results) > 0:
             for each in results:
@@ -62,17 +67,14 @@ class CacheIO:
         return filtered_set
 
     def search_advanced(self, term, api):
-        db = self.DBCache
-        db.execute_query_multiple_parameters(
-            table='api_json_return_values', regex=(term, api), parm=('query_term', 'api_name'))
+        return self.search(term,api)
 
     def add_record(self, term, api, result):
         current_datetime = self.get_date_time()
-        api = api
         query_term = term
         result = result
         field_data = "'{}', '{}', '{}', '{}'".format(current_datetime, api, query_term, result)
-        self.DBCache.add_record('api_json_return_values',
+        self.DBCache.add_record(self.table_name,
                                 'datetime, api_name, query_term, api_result_text',
                                 field_data)
 

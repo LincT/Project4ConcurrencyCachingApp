@@ -1,7 +1,26 @@
 # Capstone Project 4 - APIs, Concurrency and Caching Application
-> The application will let the user discover more information on a topic of their choice. The app will use three APIs to fetch interesting data/text/images/media related to that topic. The app should be able to create three requests simultaneously (e.g. by using Python's concurrency.futures), and then present data to the user when the results are returned.
+> The application will let the user discover more information on a song or artist of their choice.
+
+To run:
+One may wish to use a virtual environment depending on one already has installed.
+requirements are in requirements.txt, pip install -r requirements to automatically install.
+upon running the app, a new page should load with a search box
+One can type in just an artist name to get 3 songs of that artist.
+One can also type in just a song to try and find 3 versions of that song.
+A third option is if one is relatively certain in the song they want,
+one can type in artist: songname to perform a more targeted search.
+
+completed:
+fetching images(if available)
+fetching lyrics
+fetching music from spotify
+caching
+
+Partially complete:
+bookmarking
 
 Api Name | HomePage
 --- | ---
-spotfy|https://developer.spotify.com/web-api/
-example2|www.example2.net
+Spotify|https://developer.spotify.com/web-api/
+Wikipedia api|https://www.mediawiki.org/wiki/API:Main_page
+Lyrics|https://lyricsovh.docs.apiary.io

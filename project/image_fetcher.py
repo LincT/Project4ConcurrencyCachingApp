@@ -8,6 +8,10 @@ import webbrowser
 
 class image_fetcher():
 
+# <<<<<<< HEAD
+# =======
+
+# >>>>>>> images
     def fetch(self, artist):
         # Make an api request
         people_api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&'

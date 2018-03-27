@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<title>Cool Jams</title>
+
+    <h1>Search: {{ artist_name }}</h1>
+    <img src="{{ image }}" width="450" height="375">
+    <h3>Info: </h3>
+<div style="width: 700px; height: 200px; font-size: 14px; overflow: auto;"><pre>{{ info }}</pre></div>
+
+    <H3>Clips</H3>
+    {% for title in song_titles %}
+        <P>Song: {{ title }}</P>
+    {%  endfor %}
+        {% for url in song_urls %}
+            <div><iframe src="{{ url }}"
+                         width="250" height="50" frameborder="0" allowfullscreen></iframe></div>
+        {% endfor %}

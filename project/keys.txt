@@ -1,5 +1,5 @@
 Copy the text below into a python file called "keys.py"
-that file will be ommitted from github automatically so keys are only local to a machine
+that file will be omitted from github automatically so keys are only local to a machine
 
 class KeyDefinitions():
     @staticmethod

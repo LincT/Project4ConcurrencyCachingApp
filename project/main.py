@@ -1,15 +1,18 @@
 from project.CacheHandler import CacheIO
 from project.audio import Audio
-from project import flask_setup
 from project.image_fetcher import image_fetcher
 import requests
-from PIL import Image
 import webbrowser
+import logging
 from flask import Flask, render_template, request
 
 cache = CacheIO()
 audioApi = Audio()
 pic = image_fetcher()
+
+#Configure the logger to write files to tunedin.log
+logging.basicConfig(filename='tunedin.log', level=logging.INFO)
+
 
 def initialize():
     """
@@ -48,15 +51,19 @@ def get_results(term):
 
 
 def get_lyrics(term):
-    if len(str(term).split(":")) > 1:
-        artist = str(term).split(":")[0].strip().replace(" ", "%20")
-        song_title = str(term).split(":")[1].strip().replace(" ", "%20")
-        url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
-        lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
-        return lyrics
-    else:
-        return "no valid lyrics"
-
+    try:
+        if len(str(term).split(":")) > 1:
+            artist = str(term).split(":")[0].strip().replace(" ", "%20")
+            song_title = str(term).split(":")[1].strip().replace(" ", "%20")
+            url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
+            #print(url)
+            lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
+            return lyrics
+        else:
+            return "no valid lyrics"
+    except KeyError:
+        logging.info("ERROR LOADING LYRICS: %s" % url)
+        return "Error finding lyrics"
 
 def query_user(prompt):
     # currently just a wrapper
@@ -111,10 +118,10 @@ def main():
         error = None
         if request.method == 'POST':
             term = request.form['search']
-            print(term)
             if term == '':
                 error = 'Empty search. Please enter an artist or song.'
             else:
+                logging.info("USER SEARCHED: %s" % term)
                 get_lyrics(term)
                 results = []
                 for each in get_results(term):

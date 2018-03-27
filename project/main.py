@@ -1,14 +1,41 @@
 from project.CacheHandler import CacheIO
 from project.audio import Audio
-from project import flask_setup
 from project.image_fetcher import image_fetcher
 import requests
-from PIL import Image
 import webbrowser
+import logging
+from flask import Flask, render_template, request
 
 cache = CacheIO()
 audioApi = Audio()
 pic = image_fetcher()
+
+#Configure the logger to write files to tunedin.log
+logging.basicConfig(filename='tunedin.log', level=logging.INFO)
+
+app = Flask(__name__)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        term = request.form['search']
+        if term == '':
+            error = 'Empty search. Please enter an artist or song.'
+        else:
+            logging.info("USER SEARCHED: %s" % term)
+            get_lyrics(term)
+            results = []
+            for each in get_results(term):
+                results.append(each)
+            display_list = generate_view(results)
+
+            artist_name, image, info, song_titles, song_urls = display_accept_arugements(display_list)
+
+            return render_template('display.html', artist_name=artist_name, image=image, info=info,
+                                       song_titles=song_titles, song_urls=song_urls)
+
+    return render_template('login.html', error=error)
 
 def initialize():
     """
@@ -17,7 +44,7 @@ def initialize():
     pass
 
 
-def display_accept_arugements(audio_objects, artist_info, media):
+def display_accept_arugements(audio_objects):
     # Assuming audio_objects is an collection of objects each with (artist_name, song_title, song_url)
     artist_name = str(str(audio_objects[0]).split(",")[0]).split(":")[0]
     song_titles = []
@@ -26,15 +53,10 @@ def display_accept_arugements(audio_objects, artist_info, media):
         song_titles.append(str(string).split(",")[0].split(":")[1].strip())
         song_urls.append(str(string).split(",")[1].strip())
 
-    # Assuming artist_info is an object with an image(rihanna.jpg), and text("Rihanna is ....")
-    artist_image = artist_info[0]
-    # artist_image.save(image_path)
     image = pic.fetch(artist_name)
     info = get_lyrics(artist_name.strip()+":" + str(song_titles[0]).strip())
 
-    flask_setup.displayprofile(artist_name, image, info, media, song_titles, song_urls)
-
-    flask_setup.runapp(artist_name)
+    return artist_name, image, info, song_titles, song_urls
 
 def get_results(term):
     # query the api's here
@@ -52,15 +74,19 @@ def get_results(term):
 
 
 def get_lyrics(term):
-    if len(str(term).split(":")) > 1:
-        artist = str(term).split(":")[0].strip().replace(" ", "%20")
-        song_title = str(term).split(":")[1].strip().replace(" ", "%20")
-        url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
-        lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
-        return lyrics
-    else:
-        return "no valid lyrics"
-
+    try:
+        if len(str(term).split(":")) > 1:
+            artist = str(term).split(":")[0].strip().replace(" ", "%20")
+            song_title = str(term).split(":")[1].strip().replace(" ", "%20")
+            url = "https://api.lyrics.ovh/v1/{}/{}".format(artist, song_title)
+            #print(url)
+            lyrics = str(requests.get(url).json()["lyrics"])  # .replace('\n', '<br>')
+            return lyrics
+        else:
+            return "no valid lyrics"
+    except KeyError:
+        logging.info("ERROR LOADING LYRICS: %s" % url)
+        return "Error finding lyrics"
 
 def query_user(prompt):
     # currently just a wrapper
@@ -98,21 +124,18 @@ def generate_view(data_list):
         #         else:
         #             webbrowser.open(subUrl)
         # print(display_list)
-        display_accept_arugements(
-            display_list,
-            r"..\tests\Lady_Gaga_Glitter_and_Grease2.jpg",
-            "https://www.youtube.com/watch?v=Z6hL6fkJ1_k")
+        #display_accept_arugements(
+        #    display_list,
+        #    r"..\tests\Lady_Gaga_Glitter_and_Grease2.jpg",
+        #    "https://www.youtube.com/watch?v=Z6hL6fkJ1_k")
+
+        return display_list
 
 
 def main():
-    term = query_user("please type the name of a song or artist")
-    get_lyrics(term)
-    results = []
-    for each in get_results(term):
-        results.append(each)
 
-    generate_view(results)
-
+    webbrowser.open('http://127.0.0.1:5000/login')
+    app.run()
 
 if __name__ == '__main__':
     main()

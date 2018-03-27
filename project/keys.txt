@@ -7,4 +7,6 @@ class KeyDefinitions():
         details = {}
         # instead of manually editing a dictionary, use this syntax to add keys
         details.setdefault("some_key", "some_value")
+        details.setdefault("spotify_id", "your_id_here")
+        details.setdefault("spotify_secret", "your_spotify_project_secret_here")
         return details

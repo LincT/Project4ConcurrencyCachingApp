@@ -13,6 +13,29 @@ pic = image_fetcher()
 #Configure the logger to write files to tunedin.log
 logging.basicConfig(filename='tunedin.log', level=logging.INFO)
 
+app = Flask(__name__)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        term = request.form['search']
+        if term == '':
+            error = 'Empty search. Please enter an artist or song.'
+        else:
+            logging.info("USER SEARCHED: %s" % term)
+            get_lyrics(term)
+            results = []
+            for each in get_results(term):
+                results.append(each)
+            display_list = generate_view(results)
+
+            artist_name, image, info, song_titles, song_urls = display_accept_arugements(display_list)
+
+            return render_template('display.html', artist_name=artist_name, image=image, info=info,
+                                       song_titles=song_titles, song_urls=song_urls)
+
+    return render_template('login.html', error=error)
 
 def initialize():
     """
@@ -111,33 +134,8 @@ def generate_view(data_list):
 
 def main():
 
-    app = Flask(__name__)
-
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        error = None
-        if request.method == 'POST':
-            term = request.form['search']
-            if term == '':
-                error = 'Empty search. Please enter an artist or song.'
-            else:
-                logging.info("USER SEARCHED: %s" % term)
-                get_lyrics(term)
-                results = []
-                for each in get_results(term):
-                    results.append(each)
-                display_list = generate_view(results)
-
-                artist_name, image, info, song_titles, song_urls = display_accept_arugements(display_list)
-
-                return render_template('display.html', artist_name=artist_name, image=image, info=info,
-                                       song_titles=song_titles, song_urls=song_urls)
-
-        return render_template('login.html', error=error)
-
     webbrowser.open('http://127.0.0.1:5000/login')
     app.run()
-
 
 if __name__ == '__main__':
     main()

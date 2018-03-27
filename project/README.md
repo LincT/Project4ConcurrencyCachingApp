@@ -10,7 +10,14 @@ One can also type in just a song to try and find 3 versions of that song.
 A third option is if one is relatively certain in the song they want,
 one can type in artist: songname to perform a more targeted search.
 
+completed:
+fetching images(if available)
+fetching lyrics
+fetching music from spotify
+caching
 
+Partially complete:
+bookmarking
 
 Api Name | HomePage
 --- | ---

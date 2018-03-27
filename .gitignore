@@ -11,8 +11,6 @@ project/keys.py
 # running either unit tests or the whole program
 project/scratchpad.py
 
-
-
 # virtual environment should be ignored
 project/venv
 
@@ -21,3 +19,5 @@ project/cache_database
 
 #ignoring other files that should be local to machines
 project/__pycache__/
+project/tunedin.log
+

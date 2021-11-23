@@ -13,7 +13,7 @@ Pillow==8.3.2
 PyDictionary==1.5.2
 PyGithub==1.35
 PyJWT==1.5.3
-requests==2.18.4
+requests==2.20.0
 spotipy==2.4.4
 urllib3==1.22
 virtualenv==15.1.0
